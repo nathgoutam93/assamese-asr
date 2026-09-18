@@ -20,6 +20,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+export = ["onnx>=1.16", "onnxruntime>=1.18", "sherpa-onnx>=1.10"]
 dev = ["pytest>=8", "ruff>=0.5"]
 
 [project.scripts]

@@ -55,6 +55,31 @@ Input audio is converted to 16 kHz mono WAV automatically (`indic_asr/audio.py`)
 reference transcripts in `samples/refs.json`; `python tests/smoke.py` runs both
 decoders over them. On CPU, model load takes ~1 min and inference is ~1 s/clip.
 
+## On-device export (Android via sherpa-onnx)
+
+```bash
+uv pip install -e ".[export]"
+python scripts/export_onnx.py          # -> export/model.onnx, model.int8.onnx, tokens.txt
+python scripts/test_onnx.py            # runs export/model.int8.onnx through sherpa-onnx on samples/
+```
+
+What the export keeps: the Conformer encoder (115M params) and the **Assamese
+slice** of the CTC head (256 tokens + blank). The RNNT branch and the other 21
+languages' output rows are dropped. Logits are identical to the original model.
+
+| file | size | notes |
+|---|---|---|
+| `export/model.onnx` | 482 MB | fp32, output matches NeMo CTC exactly |
+| `export/model.int8.onnx` | 145 MB | int8 MatMul + pointwise Conv; output matches fp32 exactly on samples |
+| `export/tokens.txt` | — | 257 lines, `<blk>` last |
+
+Quantizing the depthwise/subsampling convs too gets to 138 MB but changes
+transcripts and runs ~5x slower in onnxruntime, so those stay fp32.
+
+On Android: use the `sherpa-onnx` AAR and `OfflineRecognizer` with
+`OfflineNemoEncDecCtcModelConfig(model = "model.int8.onnx")` plus `tokens.txt`.
+Feature extraction (80-mel, per-feature normalization) is handled by sherpa-onnx.
+
 ## Notes
 
 - `Transcriber` downloads the `.nemo` file itself and calls `restore_from`, because
@@ -70,5 +95,7 @@ src/indic_asr/
   transcribe.py   # Transcriber: loads model, ctc/rnnt transcription
   cli.py          # `indic-asr` command
 scripts/download_model.py
+scripts/export_onnx.py   # Assamese-only CTC ONNX export + int8
+scripts/test_onnx.py     # sherpa-onnx check of the export
 tests/smoke.py    # python tests/smoke.py
 ```
