@@ -1,0 +1,40 @@
+[project]
+name = "indic-asr"
+version = "0.1.0"
+description = "Assamese speech-to-text with ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "torch>=2.1",
+    "torchaudio>=2.1",
+    # AI4Bharat's NeMo fork is required: upstream NeMo does not accept the
+    # `language_id` argument that IndicConformer models expect.
+    "nemo_toolkit[asr] @ git+https://github.com/AI4Bharat/NeMo.git@nemo-v2",
+    # NeMo 1.23 (the fork) predates these breaking releases.
+    "pytorch-lightning>=2.2.1,<2.5",
+    "numpy<2",
+    "soundfile>=0.12",
+    "librosa>=0.10",
+    "huggingface_hub>=0.23",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+indic-asr = "indic_asr.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/indic_asr"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
