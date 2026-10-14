@@ -1,6 +1,6 @@
 # Shrinking the model further (option 2: reduce parameters)
 
-Status: **not started**. Option 1 (CTC-only, Assamese-only head, int8) is done in
+Status: **A in progress** (steps 1-2 done, see below). Option 1 (CTC-only, Assamese-only head, int8) is done in
 `scripts/export_onnx.py` and lands at 145 MB / 115M params. Everything below needs
 training and an Assamese dataset; it is recorded here for later experiments.
 
@@ -43,6 +43,24 @@ Config source: `model_config.yaml` inside the `.nemo` archive
 
 Also worth trying: drop *middle* layers instead of top ones and compare, and
 measure per-layer importance by zeroing one layer at a time (no training needed).
+
+**Steps 1-2 results** (`python scripts/prune_layers.py`, full table in
+`experiments/layer_pruning/results.md`). Eval: 400 random IndicVoices-as `valid`
+utterances (0.69 h, seed 0; `<tag>`-only references excluded); baseline
+19.84 WER / 6.80 CER.
+
+- Dropping top layers is the worst choice: the CTC head only reads the last
+  layer's representation (top-16 already +21 WER, top-13 ~98 WER).
+- Single-layer importance: layers 16, 15, 12 (+16-21 WER), 6, 0, 11 (+7-9) matter;
+  1-5 and 7-9 cost only +1.4-3.9 WER each.
+- Costs do not add up linearly: best 4-layer drop is +24 WER (`least` = {2,3,8,9}),
+  and at 6 layers contiguous middle {5..10} (73 WER) beats the one-at-a-time
+  ranking (94 WER). No cut is usable without step 3.
+- Candidates for fine-tuning: drop {2,3,8,9} (13 layers, 89.9M) and drop {5..10}
+  (11 layers, 77.3M). Removing from layers 1-9 and keeping 0 and 10-16 is the
+  pattern to follow; iterative greedy removal would rank better than one-shot.
+
+Step 3: `scripts/finetune_pruned.py`, run on a rented GPU per `docs/finetune-gpu.md`.
 
 ### B. Knowledge distillation into a small student  (expected: 15-30M)
 

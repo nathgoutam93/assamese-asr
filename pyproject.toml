@@ -17,6 +17,9 @@ dependencies = [
     "librosa>=0.10",
     "huggingface_hub>=0.23",
     "python-dotenv>=1.0",
+    # layer pruning / fine-tuning (scripts/prune_layers.py, scripts/finetune_pruned.py)
+    "pyarrow>=14",
+    "jiwer>=3",
 ]
 
 [project.optional-dependencies]

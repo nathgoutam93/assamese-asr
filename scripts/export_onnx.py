@@ -11,45 +11,23 @@ What this does, and why:
   dynamically-quantized int8 model.int8.onnx, and tokens.txt with <blk> last.
   Check the result with scripts/test_onnx.py.
 
-Usage: python scripts/export_onnx.py [--out export/]
+With --checkpoint, exports a layer-pruned model from scripts/finetune_pruned.py
+instead of the full encoder.
+
+Usage: python scripts/export_onnx.py [--out export/] [--checkpoint runs/x/best.pt]
 """
 
 from __future__ import annotations
 
 import argparse
-import copy
 from pathlib import Path
 
 import onnx
 import torch
 from onnxruntime.quantization import QuantType, quantize_dynamic
 
-from indic_asr.transcribe import LANGUAGE_ID, Transcriber
-
-
-def build_assamese_ctc_head(model):
-    """Return a ConvASRDecoder holding only the Assamese rows (+ blank) of the CTC head."""
-    from nemo.collections.asr.modules import ConvASRDecoder
-
-    mask = torch.tensor(model.language_masks[LANGUAGE_ID], dtype=torch.bool)
-    idx = mask.nonzero().squeeze(1)
-    n_tok = len(idx) - 1  # last selected row is the shared blank
-    # The masked rows must be a contiguous block followed by blank, otherwise the
-    # mapping from row -> token id would not be the tokenizer's id order.
-    assert torch.equal(idx[:-1], torch.arange(idx[0], idx[0] + n_tok)), "non-contiguous language block"
-    assert idx[-1] == mask.numel() - 1, "blank is expected to be the last row"
-
-    sp = model.tokenizer.tokenizers_dict[LANGUAGE_ID]
-    vocab = [sp.ids_to_tokens([i])[0] for i in range(sp.vocab_size)]
-    assert len(vocab) == n_tok, (len(vocab), n_tok)
-
-    old = model.ctc_decoder.decoder_layers[0]
-    head = ConvASRDecoder(feat_in=old.in_channels, num_classes=n_tok, vocabulary=vocab)
-    new = head.decoder_layers[0]
-    with torch.no_grad():
-        new.weight.copy_(old.weight[idx])
-        new.bias.copy_(old.bias[idx])
-    return head, vocab
+from indic_asr.pruning import load_pruned_model
+from indic_asr.transcribe import LANGUAGE_ID
 
 
 def _use_legacy_onnx_exporter() -> None:
@@ -93,17 +71,13 @@ def add_metadata(path: Path, meta: dict[str, str]) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="export", type=Path)
+    ap.add_argument("--checkpoint", help="pruned checkpoint from scripts/finetune_pruned.py")
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
-    model = Transcriber(device="cpu").model
-    model.preprocessor.featurizer.dither = 0.0
-    model.preprocessor.featurizer.pad_to = 0
-
-    head, vocab = build_assamese_ctc_head(model)
-    model.ctc_decoder = head
-    model.cur_decoder = "ctc"
-    model.eval()
+    model = load_pruned_model(args.checkpoint, "cpu")  # encoder + Assamese CTC head, eval mode
+    head = model.ctc_decoder
+    vocab = list(head.vocabulary)
 
     fp32 = args.out / "model.onnx"
     _use_legacy_onnx_exporter()
@@ -122,7 +96,8 @@ def main() -> None:
         "model_author": "AI4Bharat (exported via indic-asr)",
         "url": "https://huggingface.co/ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large",
         "language": LANGUAGE_ID,
-        "comment": "Assamese-only CTC branch of IndicConformer hybrid CTC/RNNT large",
+        "comment": "Assamese-only CTC branch of IndicConformer hybrid CTC/RNNT large, "
+        f"{len(model.encoder.layers)} of 17 encoder layers",
     }
     add_metadata(fp32, meta)
 

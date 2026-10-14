@@ -94,8 +94,15 @@ src/indic_asr/
   audio.py        # resample/downmix to 16k mono
   transcribe.py   # Transcriber: loads model, ctc/rnnt transcription
   cli.py          # `indic-asr` command
+  ctc.py          # Assamese slice of the CTC head
+  pruning.py      # layer removal, IndicVoices loading, WER scoring, checkpoints
 scripts/download_model.py
-scripts/export_onnx.py   # Assamese-only CTC ONNX export + int8
+scripts/export_onnx.py   # Assamese-only CTC ONNX export + int8 (--checkpoint for pruned models)
 scripts/test_onnx.py     # sherpa-onnx check of the export
+scripts/prune_layers.py      # no-training layer-pruning sweep
+scripts/finetune_pruned.py   # fine-tune a pruned model (GPU; docs/finetune-gpu.md)
+scripts/eval_checkpoint.py   # WER of base model or pruned checkpoint
 tests/smoke.py    # python tests/smoke.py
 ```
+
+Model shrinking beyond the export: `docs/shrinking-plan.md`.

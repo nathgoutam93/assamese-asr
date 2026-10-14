@@ -9,3 +9,4 @@ build/
 *.nemo
 .env
 export/
+runs/
