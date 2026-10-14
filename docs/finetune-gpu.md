@@ -14,18 +14,11 @@ no-training sweep that picked the layer sets: `docs/shrinking-plan.md`,
 
 ## Setup
 
-The repo has no git remote, so copy it over (this includes `.env` with the HF
-token, which the gated model and dataset need):
-
-```bash
-rsync -av --exclude .venv --exclude export --exclude runs --exclude __pycache__ \
-  ~/indic-conformer-as-120m/ gpu-box:indic-conformer-as-120m/
-```
-
 On the GPU box:
 
 ```bash
-cd indic-conformer-as-120m
+git clone https://github.com/nathgoutam93/assamese-asr.git && cd assamese-asr
+echo "HF_TOKEN=hf_..." > .env   # not in the repo; the gated model and dataset need it
 curl -LsSf https://astral.sh/uv/install.sh | sh     # if uv is missing
 sudo apt install -y ffmpeg libsndfile1
 uv venv --python 3.12 && source .venv/bin/activate
