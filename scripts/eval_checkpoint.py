@@ -14,7 +14,7 @@ import time
 
 import torch
 
-from indic_asr.pruning import batches, count_params, ctc_greedy, encode_batch, load_indicvoices, load_pruned_model, score
+from assamese_asr.pruning import batches, count_params, ctc_greedy, encode_batch, load_indicvoices, load_pruned_model, score
 
 
 def main() -> None:

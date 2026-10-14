@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from indic_asr import Transcriber
+from assamese_asr import Transcriber
 
 refs = json.loads(Path("samples/refs.json").read_text())
 files = list(refs)

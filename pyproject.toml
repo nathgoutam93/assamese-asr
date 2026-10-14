@@ -1,5 +1,5 @@
 [project]
-name = "indic-asr"
+name = "assamese-asr"
 version = "0.1.0"
 description = "Assamese speech-to-text with ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large"
 readme = "README.md"
@@ -27,7 +27,7 @@ export = ["onnx>=1.16", "onnxruntime>=1.18", "sherpa-onnx>=1.10"]
 dev = ["pytest>=8", "ruff>=0.5"]
 
 [project.scripts]
-indic-asr = "indic_asr.cli:main"
+assamese-asr = "assamese_asr.cli:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -37,7 +37,7 @@ build-backend = "hatchling.build"
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/indic_asr"]
+packages = ["src/assamese_asr"]
 
 [tool.ruff]
 line-length = 100

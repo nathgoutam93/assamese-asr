@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Literal, Sequence
 
-from indic_asr.audio import prepare_wav
+from assamese_asr.audio import prepare_wav
 
 MODEL_ID = "ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large"
 LANGUAGE_ID = "as"

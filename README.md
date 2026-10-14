@@ -1,4 +1,4 @@
-# indic-asr
+# assamese-asr
 
 Assamese speech-to-text using
 [`ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large`](https://huggingface.co/ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large)
@@ -38,18 +38,18 @@ HF_TOKEN=hf_...
 ## Usage
 
 ```bash
-indic-asr samples/audio.wav                 # RNNT decoder (default, more accurate)
-indic-asr samples/audio.wav --decoder ctc   # CTC decoder (faster)
+assamese-asr samples/audio.wav                 # RNNT decoder (default, more accurate)
+assamese-asr samples/audio.wav --decoder ctc   # CTC decoder (faster)
 ```
 
 ```python
-from indic_asr import Transcriber
+from assamese_asr import Transcriber
 
 t = Transcriber()                      # downloads weights to the HF cache on first run
 print(t.transcribe(["samples/audio.wav"], decoder="rnnt"))
 ```
 
-Input audio is converted to 16 kHz mono WAV automatically (`indic_asr/audio.py`).
+Input audio is converted to 16 kHz mono WAV automatically (`assamese_asr/audio.py`).
 
 `samples/` holds three Assamese clips from `SPRINGLab/IndicTTS_Assamese` with
 reference transcripts in `samples/refs.json`; `python tests/smoke.py` runs both
@@ -90,10 +90,10 @@ Feature extraction (80-mel, per-feature normalization) is handled by sherpa-onnx
 ## Layout
 
 ```
-src/indic_asr/
+src/assamese_asr/
   audio.py        # resample/downmix to 16k mono
   transcribe.py   # Transcriber: loads model, ctc/rnnt transcription
-  cli.py          # `indic-asr` command
+  cli.py          # `assamese-asr` command
   ctc.py          # Assamese slice of the CTC head
   pruning.py      # layer removal, IndicVoices loading, WER scoring, checkpoints
 scripts/download_model.py

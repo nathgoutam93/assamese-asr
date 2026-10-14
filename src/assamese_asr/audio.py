@@ -24,7 +24,7 @@ def prepare_wav(path: str | Path, out_dir: str | Path | None = None) -> Path:
         return path
 
     audio, _ = librosa.load(str(path), sr=TARGET_SR, mono=True)
-    out_dir = Path(out_dir) if out_dir else Path(tempfile.mkdtemp(prefix="indic_asr_"))
+    out_dir = Path(out_dir) if out_dir else Path(tempfile.mkdtemp(prefix="assamese_asr_"))
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"{path.stem}_16k.wav"
     sf.write(str(out), audio, TARGET_SR, subtype="PCM_16")

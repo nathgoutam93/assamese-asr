@@ -30,7 +30,7 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, IterableDataset, get_worker_info
 
-from indic_asr.pruning import (
+from assamese_asr.pruning import (
     LANGUAGE_ID,
     batches,
     clean_target,

@@ -22,7 +22,7 @@ from pathlib import Path
 
 import torch
 
-from indic_asr.pruning import (
+from assamese_asr.pruning import (
     batches,
     count_params,
     ctc_greedy,

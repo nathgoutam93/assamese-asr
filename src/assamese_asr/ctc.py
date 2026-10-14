@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import torch
 
-from indic_asr.transcribe import LANGUAGE_ID
+from assamese_asr.transcribe import LANGUAGE_ID
 
 
 def build_assamese_ctc_head(model):

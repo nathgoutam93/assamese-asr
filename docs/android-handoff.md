@@ -1,7 +1,7 @@
 # Android app handoff
 
 Paste the "Brief" section into a Claude Code session started in a NEW, EMPTY
-directory (e.g. `mkdir ~/indic-asr-android && cd ~/indic-asr-android && claude`).
+directory (e.g. `mkdir ~/assamese-asr-android && cd ~/assamese-asr-android && claude`).
 Model files come from this repo's `export/` directory (regenerate with
 `python scripts/export_onnx.py` if missing).
 

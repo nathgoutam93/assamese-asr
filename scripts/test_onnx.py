@@ -12,7 +12,7 @@ from pathlib import Path
 
 import sherpa_onnx
 
-from indic_asr.audio import prepare_wav
+from assamese_asr.audio import prepare_wav
 
 
 def main() -> None:

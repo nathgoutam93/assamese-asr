@@ -14,8 +14,8 @@ from typing import Iterator, Sequence
 import numpy as np
 import torch
 
-from indic_asr.ctc import build_assamese_ctc_head
-from indic_asr.transcribe import LANGUAGE_ID, Transcriber
+from assamese_asr.ctc import build_assamese_ctc_head
+from assamese_asr.transcribe import LANGUAGE_ID, Transcriber
 
 IV_REPO = "ai4bharat/IndicVoices"
 IV_LANG_DIR = "assamese"

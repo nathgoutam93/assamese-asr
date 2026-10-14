@@ -26,8 +26,8 @@ import onnx
 import torch
 from onnxruntime.quantization import QuantType, quantize_dynamic
 
-from indic_asr.pruning import load_pruned_model
-from indic_asr.transcribe import LANGUAGE_ID
+from assamese_asr.pruning import load_pruned_model
+from assamese_asr.transcribe import LANGUAGE_ID
 
 
 def _use_legacy_onnx_exporter() -> None:
@@ -93,7 +93,7 @@ def main() -> None:
         "subsampling_factor": model.cfg.encoder.subsampling_factor,
         "model_type": "EncDecCTCModelBPE",
         "version": "1",
-        "model_author": "AI4Bharat (exported via indic-asr)",
+        "model_author": "AI4Bharat (exported via assamese-asr)",
         "url": "https://huggingface.co/ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large",
         "language": LANGUAGE_ID,
         "comment": "Assamese-only CTC branch of IndicConformer hybrid CTC/RNNT large, "

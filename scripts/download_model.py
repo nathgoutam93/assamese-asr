@@ -2,6 +2,6 @@
 
 from huggingface_hub import snapshot_download
 
-from indic_asr.transcribe import MODEL_ID
+from assamese_asr.transcribe import MODEL_ID
 
 print(snapshot_download(MODEL_ID))
