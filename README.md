@@ -4,11 +4,15 @@ Assamese speech-to-text using
 [`ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large`](https://huggingface.co/ai4bharat/indicconformer_stt_as_hybrid_ctc_rnnt_large)
 (NeMo Conformer, hybrid CTC + RNNT decoders, ~120M params).
 
+Repo: https://github.com/nathgoutam93/assamese-asr
+
 ## Setup
 
 Requires Python 3.10–3.12 and system `ffmpeg`/`libsndfile` (`sudo apt install ffmpeg libsndfile1`).
 
 ```bash
+git clone https://github.com/nathgoutam93/assamese-asr.git && cd assamese-asr
+cp .env.example .env   # then add your Hugging Face token, see below
 uv venv && source .venv/bin/activate
 uv pip install -e .
 ```
@@ -29,7 +33,8 @@ uv pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 ```
 
 The model repo is **gated**: accept the terms on its Hugging Face page, then put a
-read token in `.env` (see `.env.example`):
+read token in `.env`. The pruning scripts also need access to the gated
+[`ai4bharat/IndicVoices`](https://huggingface.co/datasets/ai4bharat/IndicVoices) dataset.
 
 ```
 HF_TOKEN=hf_...
