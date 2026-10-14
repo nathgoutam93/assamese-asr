@@ -2,8 +2,9 @@
 
 Paste the "Brief" section into a Claude Code session started in a NEW, EMPTY
 directory (e.g. `mkdir ~/assamese-asr-android && cd ~/assamese-asr-android && claude`).
-Model files come from this repo's `export/` directory (regenerate with
-`python scripts/export_onnx.py` if missing).
+Model files come from `export/` in a local checkout of
+https://github.com/nathgoutam93/assamese-asr. They are not in git (too large), so
+in a fresh clone run `python scripts/export_onnx.py` first (needs `HF_TOKEN` in `.env`).
 
 ---
 
@@ -15,7 +16,9 @@ calls; everything runs on device.
 
 ### Model (already exported, do not re-export)
 
-Copy these three files from `/home/gnrc/indic-conformer-as-120m/export/`:
+Copy these three files from the `export/` directory of the user's local checkout of
+https://github.com/nathgoutam93/assamese-asr (ask the user for its path; the files
+are generated, not in git):
 
 | file | size | what |
 |---|---|---|
@@ -83,8 +86,9 @@ stream.release()
 5. `RECORD_AUDIO` runtime permission handling.
 6. A debug menu entry to transcribe a bundled WAV so behaviour can be checked
    without a microphone. Bundle `samples/as_0.wav` from the model repo
-   (`/home/gnrc/indic-conformer-as-120m/samples/`, 48 kHz - resample to 16 kHz
-   on load or pre-convert with `ffmpeg -i as_0.wav -ar 16000 -ac 1 as_0_16k.wav`).
+   (`curl -LO https://raw.githubusercontent.com/nathgoutam93/assamese-asr/main/samples/as_0.wav`;
+   48 kHz - resample to 16 kHz on load or pre-convert with
+   `ffmpeg -i as_0.wav -ar 16000 -ac 1 as_0_16k.wav`).
    Expected transcript: `এদিন মাছবোৰ গোট খাই মাছখোৱা জন্তুবোৰৰ সৈতে`
 
 Keep it plain: single Activity + ViewModel, Jetpack Compose or XML (either is fine),
